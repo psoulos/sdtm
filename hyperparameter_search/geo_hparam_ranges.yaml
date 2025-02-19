@@ -1,0 +1,20 @@
+hyperparameter-distributions:
+  # Optim args
+  lr: [5e-5, 1e-5] # 1e-4
+  optim_beta2: [.95, .98, .99, .999]
+  optim_beta1: [.9, .95, .99] #.8
+  gclip: [.5, 1, 5, 10]
+  wd: [1e-1, 1e-2, 1e-3, 1e-4]
+
+  # Train args
+  batch_size: [16, 32, 64] #128
+
+  # Model args
+  transformer_nheads: [4, 8] #, 16] #4
+  router_dropout: [0, .1, .2] #.5
+
+  #num_extra_tokens_in_memory: [4, 8]
+  positional_embedding_type: ['learned', 'sinusoidal']
+  learn_filler_embed: [0, 1]
+  tied_io_languages: [0, 1]
+  dtm_layers: [15, 20, 30]

@@ -1,0 +1,236 @@
+# xt_config.yaml - XT configuration file for DTM project 
+# updated for xt version: 333 (Sep-22-2024)
+
+# setups:
+#     batchd: { conda-packages: ["pytorch torchvision torchaudio cudatoolkit=10.2 -c pytorch-lts"], 
+#       pip-packages: ["xtlib==*", "-r requirements.txt"], install-blobfuse: false  }
+
+# TPX specific services / credentials
+external-services:
+    # compute services
+    xtteam60batch: {type: "batch", key: "$vault", url: https://xtteam60batch.westus2.batch.azure.com"}
+    labcoatbatch: {type: "batch", key: "$vault", url: "https://labcoatbatch.eastus.batch.azure.com"}
+    coletteeastaml: {type: "aml", subscription-id: "41c6e824-0f66-4076-81dd-f751c70a140b", resource-group: "colette"}
+
+    # storage and other
+
+    colettestorage: {type: "storage", provider: "azure-blob-12-18", key: "$vault"}
+    colettemongodb: {type: "mongo", connection-string: "$vault"}
+    colettekeyvault: {type: "vault", url: "https://colettekeyvault.vault.azure.net/"}
+    coletteregistry: {type: "registry", login-server: "coletteregistry.azurecr.io", username: "coletteregistry", password: "$vault", login: "true"}
+
+    # v3 storage
+    tpxstoragev2: {type: "storage", provider: "azure-blob-12-18"}
+    tpxsql: {type: "odbc", azure-login: true, 
+        connection-string: "Driver={ODBC Driver 17 for SQL Server};Server=tcp:tpxsql.database.windows.net,1433;Database=xt_db;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"}
+    tpx-key-vault: {type: "vault", url: "https://tpx-key-vault.vault.azure.net/"}
+
+    # email (SMTP server)
+    xtnotification: {type: "email", connection-string: $vault, from: "xt.notifications@5dd3228f-6eb9-4726-84bd-95c44775c226.azurecomm.net"}
+
+compute-targets:
+    # labcoatbatch uses k80 and p100 boxes 
+    labcoatbatch: {service: "labcoatbatch", vm-size: "Standard_ND6s", azure-image: "dsvm20", nodes: 1, low-pri: true,
+        docker: "pytorch-xtlib", setup: "batchd"}
+
+    sing-h100: {service: "tpx-sing-ws5", compute: "msrresrchvc", vm-size: "ND12_H100_v5", locations: ["eastus2"],   # confirmed working: 3/17/2022
+        nodes: 1, sla: basic, setup: "batchd", docker: "pytorch-xtlib"}
+
+    # we have 200 dedicated V100 (16GB) machines in our quota
+    labcoatbatch-lo: { service: "labcoatbatch", vm-size: "Standard_NC6s_v3", azure-image: "dsvm20", nodes: 1, low-pri: True,
+                       docker: "pytorch-xtlib", setup: "batchd" }
+
+    labcoatbatch-hi: {service: "labcoatbatch", vm-size: "Standard_NC6s_v3", azure-image: "dsvm20", nodes: 1, low-pri: false,
+        docker: "pytorch-xtlib", setup: "batchd"}
+
+    labcoatbatch-t4: {service: "labcoatbatch", vm-size: "Standard_NC4as_T4_v3", azure-image: "dsvm20", nodes: 1, low-pri: true,
+        docker: "pytorch-xtlib", setup: "batchd"}
+
+    labcoatbatch-p40: {service: "labcoatbatch", vm-size: "Standard_ND6s", azure-image: "dsvm20", nodes: 1, low-pri: true,
+        docker: "pytorch-xtlib", setup: "batchd"}
+    
+    labcoatbatch-p100: {service: "labcoatbatch", vm-size: "Standard_NC6s_v2", azure-image: "dsvm20", nodes: 1, low-pri: true,
+        docker: "pytorch-xtlib", setup: "batchd"}
+
+    labcoatbatch-v100: {service: "labcoatbatch", vm-size: "Standard_NC6s_v3", azure-image: "dsvm20", nodes: 1, low-pri: true,
+        docker: "pytorch-xtlib", setup: "batchd"}
+
+    labcoatbatch-k80: {service: "labcoatbatch", vm-size: "Standard_NC6", azure-image: "dsvm20", nodes: 1, low-pri: true,
+        docker: "pytorch-xtlib", setup: "batchd"}
+
+    # we have 100 dedicated V100 (16GB) machines in our quota (need to verify this)
+    xtteam60batch-hi: {service: "xtteam60batch", vm-size: "Standard_NC6s_v3", azure-image: "dsvm20", nodes: 1, low-pri: false,
+        docker: "pytorch-xtlib", setup: "batchd"}
+
+    batch: {service: "xtsandboxbatch", vm-size: "Standard_NC6s_v3", azure-image: "dsvm20", nodes: 1, low-pri: true,
+        docker: "pytorch-xtlib", setup: "batchd"}
+
+    batch-hi: {service: "xtsandboxbatch", vm-size: "Standard_NC6s_v3", azure-image: "dsvm20", nodes: 1, low-pri: false,
+        docker: "pytorch-xtlib", setup: "batchd"}
+
+    aml: {service: "coletteeastaml", compute: "nc6cluster", nodes: 1, low-pri: false, docker: "pytorch-xtlib", setup: "amld"} 
+
+store: "tpx-store"   # "colette"
+
+stores:
+    colette: {storage: "colettestorage", database: "colettemongodb", vault: colettekeyvault, target: "local"}
+    tpx-store: {storage: "tpxstoragev2", database: "tpxsql",  target: "local"}
+
+setups:
+    # NOTE: for pip install, if you use package>=x.y.z make sure you surround it with quotes (or Linux will interpret the ">" as a file redirection symbol)
+    batchd: {python-path: ["../"], pip-packages: ["xtlib==0.0.321", "nltk", "wandb", "torch_geometric"], use-sudo:
+      true, install-blobfuse: false, use-legacy-resolver: true, pre-cmds: ["update-ca-certificates"]}
+    singd:  {python-path: ["../"], pip-packages: ["xtlib==*", "nltk", "wandb", "torch_geometric"], use-sudo: true, install-blobfuse: false, use-legacy-resolver: true}
+    amld:   {python-path: ["../"], pip-packages: ["xtlib==*", "nltk", "wandb"], use-sudo: true, install-blobfuse: false, use-legacy-resolver: true}
+    
+    # keep this here until using next version of XT (build 272 or later); works around a bug in the factory config file
+    philly: { pip-packages: ["torch==1.2.0", "-r requirements.txt",]  }
+
+general:
+    advanced-mode: true         # Needed for plotting.
+    workspace: "blackboard"     # Static workspace name.
+    experiment: "bb-$username"  # Static experiment name.
+    primary-metric: "dev_acc"   # used by hyperparameter searching
+    maximize-metric: true       # How primary metric is aggregated for hp search, hp explorer, and early stopping.
+    step-name: "step"           # "iters" can refer to RL steps, SSL batches, or SL epochs.
+    monitor: "bg"               # Should a new job be monitored live?  one of: bg, new, same, none
+    storage-cert-days: 6                    # number of days that storage certificate will be valid for (Azure Batch)
+
+    # set WANDB env vars on compute node from those found in client pc at job submit time
+    env-vars: {WANDB_API_KEY: $$WANDB_API_KEY, WANDB_USERNAME: $$WANDB_USERNAME}    # "$$" means it should be expanded on client machine
+
+code:
+    # NOTE: this design relies on python-path being set to the outer dir of the working dir ("../")
+    code-dirs: ["./**==>blackboard"]         # Copy the dir containing the script to the blackboard subdir (of the node working dir)
+    code-omit: ["checkpoints", "lightning_logs", "tb_logs", "notebooks", "runs", "checkpoint.pt", "wandb", ".git", "out"]     # directories and files to OMIT when capturing before/after files
+    xtlib-upload: true          # upload XTLIB sources files for each run and use for controller and ML app
+    working-dir: "blackboard"   # where train.py is located (this is how we train in IDE on local machine)
+
+after-files:
+    after-dirs: ["blackboard/runs/**", "blackboard/out/**"]              # specifies output files (for capture from compute node to STORE)
+
+#data:
+#    data-share-path: "nc_pat"   # path in data share for current app's data
+#    data-action: "download"     # data action at start of run: none, download, mount
+#    data-writable: false        # when true, mounted data is writable
+
+database:
+    chunk-size: 200
+
+mirroring:
+    mirror-files: "blackboard/out/**"#["blackboard/runs/**", "blackboard/out/**"]       # default wildcard path for log files to mirror (live upload of changes)
+    mirror-delay-mins: 2         #  buffer changes for 2 minutes before writing them to cloud
+    show-mirror-calls: false
+    mirror-log-files: true
+
+logging:
+    merge-batch-logs: true        # Merges STDOUT.txt and STDERR.txt into one STDBOTH.txt file.
+    pip-freeze: false  # true                       # should 'pip freeze' be run during node setup process (logging before/after pip packages)
+    log-reports: [start, vars, os, disk, memory, cpu, gpu, framework, xt]     # [start, vars, package, os, disk, memory, cpu, gpu, framework, xt] (or [all])
+    snapshot-dirs: true                 # when true, directory files are logged during node script execution
+    capture-setup-cmds: true            # during node setup, selected commands will have their output sent to a log file
+    capture-docker-pull: true           # capture docker pull output to a file
+    log-controller-details: true        # logs detail about controller's activies
+
+tensorboard:
+    # hparams.filter is the filter size of the Transformer 
+    #template: "{workspace}_{run}_{logdir}_epochs={hparams.epochs}_agents={hparams.num_agents}_layers={hparams.num_layers}_key={hparams.key_size}_role={hparams.role_size}"
+#    template: >-
+#      {run}_ag={hparams.num_agents}_la={hparams.num_layers}_ks={hparams.key_size}_rs={hparams.role_size}
+#      _lp={hparams.layer_post}_lr={hparams.lr}_opt={hparams.optimizer}_ga={hparams.grad_accum}
+#      _gc={hparams.grad_clip}_ts={hparams.temp_steps}_tx={hparams.temp_max}_ti={hparams.temp_min}
+
+    #template: "{run}_optimizer={hparams.optimizer}_batchsize={hparams.batch_size}"
+    #template: "{run}"
+    template: "{run}_router_type={hparams.router_type}_router_layers={hparams.router_num_layers}_entropy_regularization_epochs={hparams.entropy_regularization_epochs}_router_hidden_dim={hparams.router_hidden_dim}_entropy_regularization_start={hparams.entropy_regularization_start}"
+
+user-filters: 
+    model: {prop: "hparams.model_name", type: "str"}
+    train-loss: {prop: "metrics.train-loss", type: "float"}
+
+internal:
+    console: "normal"           # controls the level of console output (none, normal, diagnostics, detail)
+    stack-trace: true
+
+hyperparameter-search:
+    option-prefix: "--"         # prefix for hp search generated cmdline args (set to None to disable cmd args from HP's)
+    static-search: true         # set to false to allow manual refinement of a random search.
+    search-type: grid
+
+run-reports:
+    precision: 1                # number of fractional digits to display for float values
+    significance: 2             # number of significant digits to display (by increasing precision, when needed)
+    max-fixed-length: 7         # maximum # of fractional digits to display before using scientific notation
+    last: 0                    # Default number of runs to list. Zero shows all (within the given job, for instance).
+    uppercase-hdr: false        # show column names in uppercase letters
+    child: true
+    exclude-from-hp-set:        [_id, parameters, trainable_parameters]
+    columns: [
+        # run level stuff
+        "run", "status", "duration", "username", "node_index=node", "queued", "target", "restarts",
+    ]
+
+
+named-columns:
+    # these names can be used in the "--columns=" option of various commands
+    short: [
+        "run", "username=user", "node_index=node", "queued", "duration",
+        #"target", 
+        "status",
+        # ending run stuff"duration",         
+        ]
+
+    short2: []
+
+job-reports:
+    max-width: 80               # max width of any column
+    uppercase-hdr: false        # show column names in uppercase letters
+    last: 10                    # default number of jobs to show
+    columns: ["job", "created", 
+       "started", "duration",
+       #"username",
+       "restarts:$bz", "db_retries=db_retry:$bz", "storage_retries=st_retry:$bz",
+       "workspace", "experiment", "target", "nodes", "runs", "repeat", 
+       "storage_retries=st_retry:$bz",
+        "tags.description", "tags.urgent", "tags.sad=SADD", "tags.funny", "low_pri", 
+        "vm_size", "azure_image", "service", "vc", "cluster", "queue", "service_type", "search", "search_style",
+        "status:$bz", "running_nodes=nodes:$bz", "running_runs=runs:$bz", "error_runs=errors:$bz", 
+        "completed_runs=completed:$bz", "total_runs=total:$bz"]
+
+templates:
+    # submitting runs
+    run_car_cdr_seq_8steps: 
+        description: "submit a bb run to Azure batch"
+        command: >
+            run --target=labcoatbatch-hi --runs=1 --nodes=1 main.py --task_path=nc_pat/v16/car_cdr_seq --data_filter="(s1|s2|s3|s4)" --router_hidden_dim=32 
+               --router_num_layers=1 --entropy_regularization_start=.01 --use_loss_type_regularization=0 --batch_size=32 --max_tree_depth=10 --blackboard_steps=8 
+               --lr=1e-4 --epoch 300 --entropy_regularization_end=0 --entropy_regularization_epochs=-1 --router_type=gru
+
+    # plotting
+    plot4: {hidden: true}    # from factory config
+    
+    plot: 
+        description: "plot 4 std bb metrics"
+        command: "plot @job train_loss, valid_loss, train_acc, valid_acc --break=col --layout=2x"
+
+    plot_smooth: 
+        description: "plot 4 std bb metrics w/smoothing"
+        command: "plot @job train_loss, valid_loss, train_acc, valid_acc --break=col --layout=2x --smooth @smooth"
+
+    plot_mean: 
+        description: "plot mean and stderr of 4 bb metrics"
+        command: "plot @job train_loss, valid_loss, train_acc, valid_acc --break=col --layout=2x --group=job --agg=mean --shadow-type=std"
+
+team:
+    rfernand: {contact: [rfernand@microsoft.com, "+1-425-420-6590"], approver: true}
+    psmo: {contact: [psmo@microsoft.com], approver: true}
+    psoulos: {contact: [psoulos1@jh.edu]}
+    edwardhu: {contact: [edward.hu@umontreal.ca]}
+
+boxes:
+    # This section lets you define remote computers for running your experiments (samples listed below).
+    # REQUIREMENTS: each box needs to have ports 22 and 18861 open for incoming messages.
+    # The "actions" property is a list of store names ("data", "model") whose download or mount actions should be performed on the box.
+    local: {address: "localhost", os: "windows", box-class: "windows", max-runs: 1, actions: [], setup: local}
+    rf_a6000: {address: "roland@10.159.0.136", os: "linux", box-class: "linux", max-runs: 1, actions: ["data", "model"],  docker: "pytorch-xtlib", setup: "singd"}
+    gcrsandbox386: {address: "REDMOND.rfernand@172.31.42.133", os: "linux", box-class: "linux", max-runs: 1, docker: "pytorch-xtlib", setup: "singd"}

@@ -1,0 +1,12 @@
+run497.55: python -u main.py --task_path=nc_pat/v16/active_logical_ttb --max_tree_depth=10 --lr=1e-4 --epoch=100 --entropy_regularization_end=0 --entropy_regularization_start=1e-3 --router_type=universal_transformer --router_hidden_dim=2048 --ctrl_hidden_dim=512 --transformer_norm_first=1 --blackboard_steps=12 --entropy_regularization_epochs=-1.0  --router_num_layers=4 --input_norm=tpr_norm  --seed=22817
+
+run497.48: python -u main.py --task_path=nc_pat/v16/active_logical_ttb --max_tree_depth=10 --lr=1e-4 --epoch=100 --entropy_regularization_end=0 --entropy_regularization_start=1e-3 --router_type=universal_transformer --router_hidden_dim=2048 --ctrl_hidden_dim=512 --transformer_norm_first=1 --blackboard_steps=8  --entropy_regularization_epochs=0     --router_num_layers=2 --input_norm=tpr_norm  --seed=345
+
+run497.22: python -u main.py --task_path=nc_pat/v16/active_logical_ttb --max_tree_depth=10 --lr=1e-4 --epoch=100 --entropy_regularization_end=0 --entropy_regularization_start=1e-3 --router_type=universal_transformer --router_hidden_dim=2048 --ctrl_hidden_dim=512 --transformer_norm_first=1 --blackboard_steps=8  --entropy_regularization_epochs=-1.0  --router_num_layers=4 --input_norm=tpr_norm  --seed=52992
+
+run497.23: python -u main.py --task_path=nc_pat/v16/active_logical_ttb --max_tree_depth=10 --lr=1e-4 --epoch=100 --entropy_regularization_end=0 --entropy_regularization_start=1e-3 --router_type=universal_transformer --router_hidden_dim=2048 --ctrl_hidden_dim=512 --transformer_norm_first=1 --blackboard_steps=12 --entropy_regularization_epochs=-1.0  --router_num_layers=4 --input_norm=tpr_norm  --seed=65176
+
+run497.3:  python -u main.py --task_path=nc_pat/v16/active_logical_ttb --max_tree_depth=10 --lr=1e-4 --epoch=100 --entropy_regularization_end=0 --entropy_regularization_start=1e-3 --router_type=universal_transformer --router_hidden_dim=2048 --ctrl_hidden_dim=512 --transformer_norm_first=1 --blackboard_steps=12 --entropy_regularization_epochs=-1.0  --router_num_layers=2 --input_norm=tpr_norm   --seed=4235
+
+run497.43: python -u main.py --task_path=nc_pat/v16/active_logical_ttb --max_tree_depth=10 --lr=1e-4 --epoch=100 --entropy_regularization_end=0 --entropy_regularization_start=1e-3 --router_type=universal_transformer --router_hidden_dim=2048 --ctrl_hidden_dim=512 --transformer_norm_first=1 --blackboard_steps=12 --entropy_regularization_epochs=-1.0  --router_num_layers=2 --input_norm=None       --seed=47387
+

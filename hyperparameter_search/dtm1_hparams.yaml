@@ -1,0 +1,48 @@
+hyperparameter-distributions:
+
+#  d_filler: ???
+#  dtm_layers: ???
+#  max_filled_roles: ???
+#  Do I still use --root_prediction_is_attn and --root_prediction_is_input_attn???
+#  learn_filled_embed: ???
+#  steps: ???
+#  tied_io_languages
+#
+#  # For sequences
+#  add_eob_to_memory
+#  hardcode_cons_root_token
+#  cons_only
+#  filler_noise_location
+#  filler_noise_std
+#  random_positional_max_len
+#  positional_embedding_type: [sinusoidal]
+
+
+  ctrl_hidden_dim: 64
+
+  # Optim args
+  lr: [1e-4]
+  optim_beta2: [.95]
+  optim_beta1: [.9]
+
+  gclip: [1]
+  wd: [1e-1]
+
+  # Train args
+  batch_size: [16]
+
+  # Model args
+  transformer_nheads: [4]
+  router_dropout: [.1]
+
+
+  train_log_freq: 20
+
+
+  num_warmup_steps: [10000]
+  scheduler: [cosine]
+  steps: [20000]
+
+
+
+

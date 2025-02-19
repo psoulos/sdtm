@@ -1,0 +1,26 @@
+# loss_opt_sweep.yaml: search over reg/adj loss and adam/sgd optimizers
+
+hyperparameter-distributions:
+  # fixed hyperparameters
+  task_path: nc_pat/v16/active_logical_ttb
+  data_filter: forward
+  
+  blackboard_steps: 8
+  ctrl_type: gru
+  ctrl_hidden_dim: 128
+  ctrl_num_layers: 2
+  epoch: 200
+  entropy_regularization_end: 0
+  entropy_regularization_epochs: -1
+  entropy_regularization_start: .001
+  max_tree_depth: 10
+  router_type: mixed_op_arg
+  router_hidden_dim: 64
+  router_num_layers: 1
+  #shared_keys: 1         # can't set this from here (use cmd line)
+  
+  # searching hyperparameters
+  lr: [.0001, .01, 1, 50]
+  optimizer: [adam, sgd]
+  lr_decay: [.95, .9, .8]
+  use_loss_type_regularization: [0, 1]

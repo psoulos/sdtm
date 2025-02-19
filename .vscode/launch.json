@@ -1,0 +1,43 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "BB Fixed",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/main.py",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "args": [
+                "--epoch=200",   
+                // "--router_hidden_dim=64",
+                // "--router_num_layers=2",
+                // "--entropy_regularization_start=.001",
+
+                // "--lr=.0001",
+                // "--lr_decay=.8",
+                // "--optimizer=adam",
+                // "--use_loss_type_regularization=1",
+                // "--batch_size=2",
+
+                // "--task_path=nc_pat/v16/active_logical_ttb",
+                // "--data_filter=forward",   // (s1|s2|s3|s4)",
+                // "--max_tree_depth=10",
+                // "--blackboard_steps=8",   //=8",
+                // "--entropy_regularization_end=0",
+                // "--entropy_regularization_epochs=-1",
+
+                // "--router_type=mixed_op_arg",
+                // //"--router_type=gru",
+
+                // "--ctrl_hidden_dim=128",
+                // "--ctrl_num_layers=2",
+                // "--ctrl_type=gru"
+            ],            
+        },
+    ]
+}

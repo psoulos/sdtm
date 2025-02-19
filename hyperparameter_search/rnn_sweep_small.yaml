@@ -1,0 +1,3 @@
+hyperparameter-distributions:
+  router_type: ['lstm', 'gru']
+  router_hidden_dim: [32, 64]

@@ -1,0 +1,6 @@
+# First install pytorch based on the instructions here: https://pytorch.org/get-started/locally/
+# Then install torch_geometric `conda install pyg -c pyg`
+wandb
+torch_geometric
+nltk
+numpy

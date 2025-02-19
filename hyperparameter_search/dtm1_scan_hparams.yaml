@@ -1,0 +1,62 @@
+#xt run --max-node-duration=6h --target=sing-h100 --request=1 --description="final run for SCAN jump and length" --runs=10 --nodes=10 --hp-config=hyperparameter_search/scan_hparams.yaml main.py --wandb_name=neurips_scan_final --wandb_group=neurips --use_wandb
+hyperparameter-distributions:
+  task_path: [
+    'TreeSCAN/v15/add_prim_split/jump/separate_to_parsed',
+    'TreeSCAN/v15/length_split/separate_to_parsed',
+    'TreeSCAN/v15/mcd1/separate_to_parsed',
+    'TreeSCAN/v15/mcd2/separate_to_parsed',
+    'TreeSCAN/v15/mcd3/separate_to_parsed',
+    'TreeSCAN/v15/simple_split/separate_to_parsed',
+    'TreeSCAN/v15/template_split/around_right/separate_to_parsed',
+
+    #'TreeSCAN/v15/add_prim_split/jump/separate_to_leaves',
+    #'TreeSCAN/v15/length_split/separate_to_leaves',
+    #'TreeSCAN/v15/mcd1/separate_to_leaves',
+    #'TreeSCAN/v15/mcd2/separate_to_leaves',
+    #'TreeSCAN/v15/mcd3/separate_to_leaves',
+    #'TreeSCAN/v15/simple_split/separate_to_leaves',
+    #'TreeSCAN/v15/template_split/around_right/separate_to_leaves',
+  ]
+
+  test_most_recent_checkpoint: 1
+  max_tree_depth: 7
+  dtm_layers: 14
+  hardcode_cons_root_token: '<NT>'
+  validate_every_num_epochs: 3
+  use_vocab_info: 1
+  random_positional_max_len: 18
+  sparse: 0
+
+  tied_io_languages: [1]
+  add_eob_to_memory: [1]
+  cons_only: [1]
+  early_stop_epochs: [1000]
+  filler_noise_location: ['input']
+  filler_noise_std: 1
+  positional_embedding_type: ['sinusoidal']
+  d_filler: 128
+
+  ctrl_hidden_dim: 256
+  ctrl_type: ['linear']
+
+  # Optim args
+  lr: [1e-4]
+  optim_beta2: [.95]
+  optim_beta1: [.9]
+
+  gclip: [1]
+  wd: [1e-1]
+
+  # Train args
+  batch_size: [128]
+
+  # Model args
+  transformer_nheads: 8
+  router_dropout: [.1]
+
+  num_warmup_steps: [10000]
+  scheduler: [cosine]
+  steps: [150000]
+
+  train_log_freq: 20
+

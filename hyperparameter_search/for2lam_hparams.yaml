@@ -1,0 +1,32 @@
+hyperparameter-distributions:
+  # For2Lam specific
+  task_path: 'For2Lam/v2/small/original/with_nt'
+  dtm_layers: 56
+  steps: 50000
+  ctrl_hidden_dim: 256
+  transformer_nheads: 8
+  max_tree_depth: 14
+  d_filler: 64
+  use_vocab_info: 1
+  max_filled_roles: 1024
+
+  # Shared with active logical
+  # Optim args
+  lr: [1e-4]
+  optim_beta2: [.95]
+  optim_beta1: [.9]
+
+  gclip: [1]
+  wd: [1e-1]
+
+  # Train args
+  batch_size: [16]
+
+  # Model args
+  router_dropout: [.1]
+
+
+  train_log_freq: 20
+
+  num_warmup_steps: [10000]
+  scheduler: [cosine]

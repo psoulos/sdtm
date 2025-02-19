@@ -1,0 +1,5 @@
+hyperparameter-distributions:
+  router_type: ['lstm', 'gru']
+  router_hidden_dim: [32, 64, 128]
+  router_num_layers: [1, 2]
+  entropy_regularization_epochs: [-1, 0]
